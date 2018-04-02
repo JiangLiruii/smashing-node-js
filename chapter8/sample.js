@@ -47,7 +47,8 @@ server.use(connect.logger('dev'));
 
 // logger server
 let connect = require('connect');
-connect.createServer(connect.logger('dev'), (req, res) => {
+connect.createServer(connect.logger('dev'), (req, res) => { // 实际上调用use两次
     res.writeHead(200);
     res.end('hello world')
-})
+}).listen(3000);
+
