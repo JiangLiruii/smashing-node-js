@@ -1,0 +1,10 @@
+<h1>Tweet results fpr <%= search%></h1>
+<% if (results.length) {%>
+    <ul>
+        <% for (let i = 0; i < results.length; i += 1) {%>
+            <li><%=results[i].text %> - <em><%=results[i].frome_user %></li>
+                <%}%>
+    </ul>
+    <%} else{ %>
+        <p>No results</p>
+        <% } %>
