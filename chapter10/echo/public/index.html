@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WebSocket echo test</title>
+    <!-- 使用浏览器端的API -->
+    <script>
+        var lastMessage;
+        window.onload = function() {
+            let ws = new WebSocket('ws://localhost:3000');
+            // ws.onopen = function() {
+            //     ping();
+            // };
+            // ws.onmessage = (ev) => {
+            //     console.log(ev.data);
+            //     document.getElementById('latency').innerHTML = new Date - lastMessage;
+            //     setTimeout(() => {
+            //         ping();
+            //     }, 1000);
+            // };
+            // function ping() {
+            //     lastMessage = +new Date;
+            //     ws.send('ping');
+            // }
+            ws.onopen = function() {
+                document.onmousemove = function(ev) {
+                    ws.send(JSON.stringify({x:ev.clientX, y:ev.clientY}));
+                };
+            };
+            let initialized;
+            function move(id, pos) {
+                let cursor = document.getElementById('cursor-' + id);
+                if (!cursor) {
+                    cursor = document.createElement('img');
+                    cursor.id = 'cursor-' + id;
+                    cursor.src = '/cursor.png';
+                    cursor.style.position = 'absolute';
+                    cursor.clientWidth = 100;
+                    cursor.clientHeight = 50;
+                    document.body.appendChild(cursor);
+                } 
+                cursor.style.left = pos.x + 'px';
+                cursor.style.top = pos.y + 'px';
+            }
+            function remove(id) {
+                let cursor = document.getElementById('cursor-' + id);
+                cursor.parentNode.removeChild(cursor);
+            }
+            ws.onmessage = function(ev) {
+                console.log(ev,ev.data);
+                let obj = JSON.parse(ev.data);
+                if (!initialized) {
+                    initialized = true;
+                    for (let id in obj) {
+                        move(id, obj[id].pos);
+                    }
+                } else {
+                    if ('disconnect' === obj.type) {
+                        remove(obj.id);
+                    } else {
+                        move(obj.id, obj.pos)
+                    }
+                }
+            }
+        } 
+    </script>
+</head>
+<body>
+    <h1>WebSocket Echo</h1>
+    <h2>Letency:<span id="latency"></span>ms</h2>
+</body>
+</html>
