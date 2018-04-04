@@ -49,10 +49,9 @@ window.onload = function() {
                     let a = document.createElement('a');
                     a.innerHTML = '   select';
                     a.href = '#';
-                    a.onclick = function() {
+                    a.onclick = function(e) {
                         socket.emit('song', song);
-                        play(song);
-                        return false;
+                        e.preventDefault();
                     }
                     result.appendChild(a);
                     results.appendChild(result)
@@ -69,7 +68,19 @@ window.onload = function() {
     let playing = document.getElementById('playing');
     function play(song) {
         if(!song) return;
-        playing.innerHTML = '<br><b>Now playing</b>' + song.singername + '  ' + song.songname + '</br>'
+        let play_detail = document.createElement('p');
+        play_detail.innerHTML = '<br><b>Now playing</b>' + song.singername + '  ' + song.songname + '</br>'
+        playing.appendChild(play_detail)
+        let prev = play_detail.previousSibling;
+        if(prev.innerHTML) {
+            prev.innerHTML = prev.innerHTML.replace('Now', 'Previous');
+        }
+        let img = document.getElementById('artist');
+        img.src = song.image_url;
+        img.style.display = 'block';
+        let audio = document.getElementById('audio');
+        audio.style.display = 'block';
+        audio.src = song.play_url;
     }
     socket.on('song', play);
 }

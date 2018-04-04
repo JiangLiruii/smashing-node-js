@@ -35,7 +35,7 @@ io.sockets.on('connection', function(socket) { // 自定义api
     });
 
     socket.on('search', function(q, fn) {
-        request('http://mobilecdn.kugou.com/api/v3/search/song?format=json&keyword='+ encodeURIComponent(q) + '&page=1&pagesize=20&showtype=1',
+        request('http://mobilecdn.kugou.com/api/v3/search/song?format=json&keyword='+ encodeURIComponent(q) + '&page=1&pagesize=90&showtype=2',
         function(res) {
             console.log(res.status,JSON.parse(res.text).data.info);
             if(res.status === 200) {
@@ -43,11 +43,23 @@ io.sockets.on('connection', function(socket) { // 自定义api
             }
         })
     });
+
     socket.on('song', function(song) {
-        console.log(socket.dj);
         if (socket.dj) {
+            function songEmit(res) {
+                let ress = JSON.parse(res.text);
+                currentSong.play_url = ress['data']['play_url'];
+                currentSong.image_url = ress['data']['img'];
+                console.log('这是song', "这是ress", song.play_url, song.image_url);
+                io.sockets.emit('song', currentSong);
+            }
             currentSong = song;
-            socket.broadcast.emit('song', song);
+            // 无损音质
+            if (currentSong['320hash']) {
+                request('http://www.kugou.com/yy/index.php?r=play/getdata&hash=' + currentSong['320hash'],songEmit)
+            } else {
+                request('http://www.kugou.com/yy/index.php?r=play/getdata&hash=' + currentSong['hash'],songEmit);
+            }
         }
     })
 }); 

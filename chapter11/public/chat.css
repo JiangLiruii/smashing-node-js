@@ -10,3 +10,9 @@
 form.isDJ #result a {
     display: inline;
 }
+img{
+    display: none;
+}
+audio{
+    width: 100%;
+}
