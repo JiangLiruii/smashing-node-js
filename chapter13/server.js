@@ -67,7 +67,6 @@ app.get('/item/:id',(req, res, next) => {
   getItem((function(item) {
     getReviews(item.id,function(reviews) {
       res.render('item', {item:item, reviews: reviews})
-    })
-  }))
-
+    });
+  }));
 })

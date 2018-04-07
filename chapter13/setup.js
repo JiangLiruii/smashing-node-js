@@ -23,3 +23,8 @@ db.query('CREATE TABLE review (' +
 'stars INT(1),' +
 'created DATETIME,'+
 'PRIMARY KEY(id)');
+
+// 关闭客户端
+db.end(() => {
+  process.exit();
+});
