@@ -1,0 +1,18 @@
+#chat{
+    display: none;
+}
+.confirm {
+    list-style-image: url(icon.png)
+}
+#dj {
+    display: none;
+}
+form.isDJ #result a {
+    display: inline;
+}
+img{
+    display: none;
+}
+audio{
+    width: 100%;
+}

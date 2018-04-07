@@ -1,5 +1,9 @@
 {
   "name": "tweet-client",
   "description": "this is one tweet client",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "dependencies": {
+    "superagent": "^3.8.2",
+    "up": "^1.0.2"
+  }
 }

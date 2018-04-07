@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Socket io chat</title>
+    <!-- socket.io已经进行了浏览器端的托管,直接引用即可 -->
+    <script src="socket.io/socket.io.js"></script>
+    <script src="chat.js"></script>
+    <link rel="stylesheet" href="/chat.css" />
+</head>
+<body>
+    <div id="chat">
+        <ul id="message"></ul>
+        <form id="form">
+            <input type="text" id="input"/>
+            <button> Send</button>
+        </form>
+    </div>
+    <div id="playing">
+        <form id="dj">
+            <h3>search song</h3>
+            <input type="text" id="s">
+            <ul id="results"></ul>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <img id="artist">
+    <audio id="audio" controls></audio>
+</body>
+</html>
