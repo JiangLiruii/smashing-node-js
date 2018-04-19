@@ -1,8 +1,10 @@
 let express = require('express'), 
     sio = require('socket.io'), 
     request = require('superagent'),
+    path = require('path'),
     dj, currentSong,
-    app = express.createServer(express.bodyParser(),express.static('public'));
+    app = express.createServer(express.bodyParser());
+app.use(express.static(__dirname + '/views'))
 app.listen(3000);
 let io = sio.listen(app);
 function elect(socket) {
@@ -35,11 +37,16 @@ io.sockets.on('connection', function(socket) { // 自定义api
     });
 
     socket.on('search', function(q, fn) {
-        request('http://mobilecdn.kugou.com/api/v3/search/song?format=json&keyword='+ encodeURIComponent(q) + '&page=1&pagesize=90&showtype=2',
+        request('http://songsearch.kugou.com/song_search_v2?keyword='+ encodeURI(q) + '&userid=admin&clientver=&platform=WebFilter&tag=em&filter=2&iscorrection=1&privilege_filter=0',
         function(res) {
-            console.log(res.status,JSON.parse(res.text).data.info);
+            console.log('====================================');
+            console.log(res.status,JSON.parse(res.text).data);
+            console.log('====================================');
             if(res.status === 200) {
-                fn(JSON.parse(res.text).data.info);
+                // let a = res.text;
+                // let c = JSON.parse(a);
+                // fn(c.data.lists);
+                fn(JSON.parse(res.text).data.lists)
             }
         })
     });
@@ -50,16 +57,25 @@ io.sockets.on('connection', function(socket) { // 自定义api
                 let ress = JSON.parse(res.text);
                 currentSong.play_url = ress['data']['play_url'];
                 currentSong.image_url = ress['data']['img'];
-                console.log('这是song', "这是ress", song.play_url, song.image_url);
+                // console.log('这是song', "这是ress", song.play_url, song.image_url);
                 io.sockets.emit('song', currentSong);
             }
             currentSong = song;
             // 无损音质
-            if (currentSong['320hash']) {
-                request('http://www.kugou.com/yy/index.php?r=play/getdata&hash=' + currentSong['320hash'],songEmit)
-            } else {
-                request('http://www.kugou.com/yy/index.php?r=play/getdata&hash=' + currentSong['hash'],songEmit);
-            }
+            // if (currentSong['SQFileHash'] > 0) {
+            //     request('http://www.kugou.com/yy/index.php?r=play/getdata&hash=' + currentSong['SQFileHash'],songEmit)
+            // } else if (currentSong['ResFileHash']) {
+            //     request('http://www.kugou.com/yy/index.php?r=play/getdata&hash=' + currentSong['ResFileHash'],songEmit);
+            // } else if (currentSong['HQFileHash']) {
+            //     request('http://www.kugou.com/yy/index.php?r=play/getdata&hash=' + currentSong['HQFileHash'],songEmit);
+            // }else if (currentSong['FileHash']) {
+            //     request('http://www.kugou.com/yy/index.php?r=play/getdata&hash=' + currentSong['FileHash'],songEmit);
+            // } else{
+            //     console.error('no file available')
+            // }
+            if (currentSong['FileHash']) {
+                    request('http://www.kugou.com/yy/index.php?r=play/getdata&hash=' + currentSong['FileHash'],songEmit);
+                }
         }
     })
 }); 

@@ -45,7 +45,7 @@ window.onload = function() {
             for (let i = 0, max = songs.length; i< max; i += 1) {
                 (function(song) {
                     let result = document.createElement('li');
-                    result.innerHTML = song.singername + '   -<b>' + song.songname + '</b>'
+                    result.innerHTML = song.SingerName + '   -<b>' + song.SongName + '</b>'
                     let a = document.createElement('a');
                     a.innerHTML = '   select';
                     a.href = '#';
@@ -69,7 +69,7 @@ window.onload = function() {
     function play(song) {
         if(!song) return;
         let play_detail = document.createElement('p');
-        play_detail.innerHTML = '<br><b>Now playing</b>' + song.singername + '  ' + song.songname + '</br>'
+        play_detail.innerHTML = '<br><b>Now playing</b>' + song.SingerName + '  ' + song.SongName + '</br>'
         playing.appendChild(play_detail)
         let prev = play_detail.previousSibling;
         if(prev.innerHTML) {
